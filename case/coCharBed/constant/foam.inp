@@ -1,0 +1,22 @@
+species
+(
+    N2
+    O2
+    CO2
+    CO
+);
+
+reactions
+{
+
+   COOxidationReaction
+    {
+        type    irreversibleArrheniusReaction;
+        reaction "CO^1.0 + 0.5O2^0.5 = CO2";
+        A        1.3e+11;
+        beta     0;
+        Ta       15098;
+    }
+
+}
+

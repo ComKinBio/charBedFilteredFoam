@@ -1,0 +1,12 @@
+ 
+replace thermally thick pariticle model
+
+modified char particle (sub model, p-p radiation, surface reaction, convection)
+
+thermally thin with avg
+
+source filter add list function
+
+gas filter add list to get avg field 
+
+add filter function to solver (diffusion time step calculate)

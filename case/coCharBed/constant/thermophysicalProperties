@@ -1,0 +1,84 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            hePsiThermo;
+    mixture         reactingMixture;
+    transport       sutherland;
+    thermo          janaf;
+    energy          sensibleEnthalpy;
+    equationOfState perfectGas;
+    specie          specie;
+}
+
+chemistryReader foamChemistryReader;
+
+foamChemistryThermoFile "$FOAM_CASE/constant/foam.dat";
+
+foamChemistryFile "$FOAM_CASE/constant/foam.inp";
+
+inertSpecie     N2;
+
+liquids
+{
+}
+
+solids
+{
+    C
+    {
+        defaultCoeffs   no;
+        CCoeffs
+        {
+            rho             880; // Morten p24
+            Cp              2300; // Di blasi and Russo 1994
+            K               1.47; // Lee et al. 1976 p128 morten
+            Hf              0;
+            emissivity      1.0;
+        }
+    }
+    Ash
+    {
+        defaultCoeffs   no;
+        AshCoeffs
+        {
+            rho             1648; // Morten p24
+            Cp              754; // Di blasi and Russo 1994
+            K               1.03; // Lee et al. 1976 p128 morten
+            Hf              0;
+            emissivity      1.0;
+        }
+    }
+}
+
+//solids
+//{
+//    solidComponents ( C ash );
+//    C
+//    {
+//        defaultCoeffs   yes;
+//    }
+//    ash
+//    {
+//        defaultCoeffs   yes;
+//    }
+
+//}
+
+
+// ************************************************************************* //

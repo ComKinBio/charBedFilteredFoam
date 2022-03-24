@@ -1,0 +1,328 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      coalCloud1Properties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solution
+{
+    active          true;
+    transient       yes;
+    coupled         true;
+    cellValueSourceCorrection on;
+
+    sourceTerms
+    {
+        schemes
+        {
+            rho             semiImplicit 1;
+            U               semiImplicit 1;
+            Yi              semiImplicit 1;
+            h               explicit 1;
+            radiation       semiImplicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cell;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+        G               cell;
+        alpha           cell;
+        rhoavg          cell;
+        Uavg            cell;
+        muavg           cell;
+        Tavg            cell;
+        cpavg           cell;
+        kappaavg        cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    parcelTypeId    1;
+    
+    coarseGrid      yes;
+    disableHtc      no;
+    
+    noCombustion    no;
+    useHeatRatio    no;
+    
+    usePpConduction no;
+    
+    limitedCombustion   no;
+    devoDegree      -1;
+    
+    surfaceExplicit yes;
+    
+    coarseGridSpeciesConcentration  yes;
+
+    usePpradiation yes;
+    
+    convectionCorrection   yes;
+    
+    parcelShape     1;
+    xi0             -0.004142616;
+    rhoMin          1e-15;
+    TMin            200;
+//     TMax            1600;
+    pMin            1000;
+    minParticleMass 1e-15;
+
+    rho0            880;// add
+    T0              298;// add
+    Cp0             2300;// add
+    kp0             0.1;
+
+    youngsModulus   5e6;
+    poissonsRatio   0.3;
+
+    epsilon0        0.8;//particle emissivity []
+    f0              0.5;
+
+    Pr              0.7;
+    TDevol          300;// add
+    LDevol          207000;
+    hRetentionCoeff 1;// add as COmiga--activation energy in omega function
+    Srinkalpha      0.5; // add
+    Srinkbeta       0.0; // add
+    Srinkgamma      0.65;// add
+
+    charSphericity  0.5;
+    ashSphericity   0.182;
+    
+    ashInFuel       0.076;
+    
+    alphaMax        0.75;
+    
+    alphaMin        0.1;
+    
+    diffusionBandWidth  0.0204;
+    diffusionSteps      6;
+    
+    bToDpRatio          1.0;
+    
+    diffusionBandWidthRadia  0.0102;        
+    diffusionBandWidthHeat   0.0102;
+    diffusionBandWidthMass   0.0102;
+    diffusionBandWidthMomentum  0.0102;
+
+    
+    hCoeff 58;
+    
+    
+}
+
+subModels
+{
+    particleForces
+    {
+        ErgunWenYuDrag
+        {
+            alphac alpha;
+        }
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            patchInjection;
+            massTotal       0;
+            SOI             0;
+            parcelBasisType fixed;
+            nParticle       1;
+            patchName       outlet;
+            duration        1;
+            parcelsPerSecond 2500;
+            U0              (0 0 0);
+            flowRateProfile constant 1;
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value   0.0102;
+                }
+            }
+        }
+    }
+    
+    dispersionModel none; // add
+
+    patchInteractionModel localInteraction;
+    
+    localInteractionCoeffs    
+    {
+       patches
+       (
+          walls
+          {
+                type rebound;
+                e    0.97;
+                mu   0.09;
+          }  
+          outlet
+          {
+                type rebound;
+                e    0.97;
+                mu   0.09;
+          }
+         inlet
+          {
+                type rebound;
+                e    0.97;
+                mu   0.09;
+	      }
+       );
+    }
+    
+    collisionModel pairCollisionHeat;//pairCollision;
+
+    pairCollisionHeatCoeffs
+    {
+        maxInteractionDistance  0.0102;
+
+        writeReferredParticleCloud no;
+
+        pairModel pairSpringSliderDashpotHeat;
+
+        pairSpringSliderDashpotHeatCoeffs
+        {
+            useEquivalentSize   no;
+            alpha               0.07051;
+            b                   1.5;
+            mu                  0.3;
+            cohesionEnergyDensity 0;
+            collisionResolutionSteps 12;
+        };
+        wallModel wallSpringSliderDashpot;
+
+        wallSpringSliderDashpotCoeffs
+        {
+            useEquivalentSize no;
+            collisionResolutionSteps 12;
+            youngsModulus   5e6;
+            poissonsRatio   0.3;
+            alpha           0.07051;
+            b               1.5;
+            mu              0.3;
+            cohesionEnergyDensity 0;
+        };
+
+        U     U;
+    }
+    
+    stochasticCollisionModel none;
+
+    heatTransferModel Wakao;
+
+    compositionModel singleMixtureFraction;
+
+    phaseChangeModel none;
+
+    devolatilisationModel none; //add
+
+    surfaceReactionModel COxidationKineticDiffusionLimitedRateWithAshSteam; //none; //add
+
+    surfaceFilmModel none;
+
+    radiation       off;
+
+    
+    WakaoCoeffs
+    {
+        BirdCorrection  false;
+    }
+
+    singleMixtureFractionCoeffs
+    {
+        phases
+        (
+            gas // number doesn't mean any thing
+            {
+                CO2             0.3;
+                CO              0.3;
+                O2              0.4;
+            }
+            liquid
+            {
+            }
+            solid
+            {
+                C                1.0;  //name must be the C
+                Ash              0.0; 
+            }
+        );
+        YGasTot0        0.0;
+        YLiquidTot0     0.0;
+        YSolidTot0      1.0;
+    }
+
+    liquidEvaporationCoeffs
+    {
+        enthalpyTransfer enthalpyDifference;
+
+        activeLiquids
+        (
+            H2O
+        );
+    }
+
+    COxidationKineticDiffusionLimitedRateWithAshSteamCoeffs
+    {
+        COmiga        3390.0;// activation energy in omega function
+        ep3            0.65;//porosity of ash layer
+        C1_O2           2.03e-10;//mass diffusion constant
+        C1_H2O           8.48e-10;//mass diffusion constant
+        C1_CO2           5.37e-10;//mass diffusion constant
+        C1_H2           2.60e-9;//mass diffusion constant
+        C2_1            1.715;//- Kinetics limited rate pre-exponential constant, C2
+        C2_2            3.42;//- Kinetics limited rate pre-exponential constant, C2
+        C2_3            3.42;//- Kinetics limited rate pre-exponential constant, C2
+        C2_4            3.42e-3;//- Kinetics limited rate pre-exponential constant, C2
+        E1              9000.0;//- Kinetics limited rate activation energy RR together
+        E2              15600.0;//- Kinetics limited rate activation energy RR together
+        E3              15600.0;//- Kinetics limited rate activation energy RR together
+        E4              15600.0;//- Kinetics limited rate activation energy RR together
+      //C1              5.0E-12; //mass diffusion constant, same value for O2, CO2, and H2O
+        AO2              2.51E-03;//pre-exponential factor
+        AH2O              2.0E-03;
+        ACO2              3.0E-01;
+        EO2               7.48E+07; //activation energy
+        EH2O               1.96E+08;
+        ECO2               2.00E+08;
+    }
+    
+    
+}
+
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //

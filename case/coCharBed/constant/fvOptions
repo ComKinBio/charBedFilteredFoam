@@ -1,0 +1,121 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ source1
+ {
+     type            fixedTemperatureConstraint;
+ 
+     timeStart       10;
+     duration        50;
+     selectionMode   cellSet;
+     cellSet         ignitionCells;
+ 
+     mode            uniform;
+     temperature     1600;
+ }
+ 
+//   source2
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       60.5;
+//      duration        0.5;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     850;
+//  }
+//  
+//   source3
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       61;
+//      duration        0.5;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     950;
+//  }
+//  
+//   source4
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       61.5;
+//      duration        0.5;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     1000;
+//  }
+//  
+//   source5
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       62;
+//      duration        0.5;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     1100;
+//  }
+//  
+//   source6
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       62.5;
+//      duration        0.5;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     1200;
+//  }
+//  
+//   source7
+//  {
+//      type            fixedTemperatureConstraint;
+//  
+//      timeStart       63;
+//      duration        2;
+//      selectionMode   cellSet;
+//      cellSet         heatingCells;
+//  
+//      mode            uniform;
+//      temperature     1250;
+//  }
+ 
+//  limitT
+// {
+//     type            limitTemperature;
+//     active          yes;
+// 
+//     selectionMode   all;
+//     min             298;
+//     max             3000;
+// //     phase           gas; // optional
+// }
+
+
+// ************************************************************************* //

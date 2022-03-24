@@ -1,0 +1,172 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      radiationProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+radiation       off;
+
+solverFreq      10;
+
+radiationModel  none;
+
+// radiationModel  fvDOM;
+
+
+// fvDOMCoeffs
+// {
+//     nPhi    2;          // azimuthal angles in PI/2 on X-Y.(from Y to X)
+//     nTheta  2;          // polar angles in PI (from Z to X-Y plane)
+//     tolerance   1e-2;   // convergence tolerance for radiation iteration
+//     maxIter 3;          // maximum number of iterations
+// }
+// 
+// // Number of flow iterations per radiation iteration
+// solverFreq 10;
+
+
+noRadiation
+{
+}
+
+P1Coeffs
+{
+    C               C [ 0 0 0 0 0 0 0 ] 0;
+}
+
+absorptionEmissionModel binary;
+
+binaryCoeffs
+{
+    model1
+    {
+        absorptionEmissionModel greyMeanCombustion;
+        
+        greyMeanCombustionCoeffs
+        {
+            lookUpTableFileName      none;
+
+            EhrrCoeff                0.0;
+
+            CO2
+            {
+                Tcommon         200;   // Common Temp
+                invTemp         true;   // Is the polynomio using inverse temperature.
+                Tlow            200;   // Low Temp
+                Thigh           2500;  // High Temp
+
+                loTcoeffs       // coefss for T < Tcommon
+                (
+                    0           //  a0            +
+                    0           //  a1*T          +
+                    0           //  a2*T^(+/-)2   +
+                    0           //  a3*T^(+/-)3   +
+                    0           //  a4*T^(+/-)4   +
+                    0           //  a5*T^(+/-)5   +
+                );
+                hiTcoeffs        // coefss for T > Tcommon
+                (
+                    0.1
+                    0
+                    0
+                    0
+                    0
+                    0
+                );
+
+            }
+
+            O2
+            {
+                Tcommon         200;
+                invTemp         true;
+                Tlow            200;
+                Thigh           2500;
+
+                loTcoeffs
+                (
+                    0
+                    0
+                    0
+                    0
+                    0
+                    0
+                );
+                hiTcoeffs
+                (
+                    0
+                    0
+                    0
+                    0
+                    0
+                    0
+                );
+            }
+
+
+            N2
+            {
+                Tcommon         200;
+                invTemp         true;
+                Tlow            200;
+                Thigh           2500;
+
+                loTcoeffs
+                (
+                    0
+                    0
+                    0
+                    0
+                    0
+                    0
+                );
+                hiTcoeffs
+                (
+                    0
+                    0
+                    0
+                    0
+                    0
+                    0
+                );
+            }
+        }
+    }
+    model2
+    {
+        absorptionEmissionModel cloudAvg;
+        cloudAvgCoeffs
+        {
+            cloudNames
+            (
+                coalCloud
+//                 limestoneCloud1
+            );
+        }
+    }
+}
+
+scatterModel    cloudAvg;
+
+cloudAvgCoeffs
+{
+    cloudNames
+    (
+        coalCloud
+     //   limestoneCloud1
+    );
+}
+
+
+// ************************************************************************* //

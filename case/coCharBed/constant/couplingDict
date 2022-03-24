@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7  
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "couplingDict";
+    object      couplingDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+radiationHeat   false;
+
+gasFilter
+{
+    useGasFilter    true;
+    
+    useImplicitLaplacian    true;
+    
+    diffusionBandWidth  0.0102;
+    diffusionSteps  6;
+    
+    ratio   1.5;
+    
+    adjustDiffusionSteps    true;
+}
+
+
+sourceFilter
+{
+    useSourceFilter true;
+    
+    useStep         true;
+}
+
+TFM
+{
+    useTFMGas   false;
+    
+    useTFMSource    false;
+    
+    gridOrigin (-0.065 -0.065 0);
+
+    gridVertex (0.065 0.065 0.104);
+        
+    // gridSize 0.0168;
+    gridSize 0.013;
+    // gridSize 0.0217;
+    
+    //for perellel decompose
+    //how many times that a proc is larger than the coarseGridSize
+    procSizeXY 5;
+    procSizeZ 2;
+}
+
+
+DEMFlag
+{
+    //DEMflag settings
+    useDEMFlag true;
+
+    fixedParticle false;
+
+    DEMStepMax 10; 
+
+    DEMInter 0.5;
+}
+
+
+
+// ************************************************************************* //
