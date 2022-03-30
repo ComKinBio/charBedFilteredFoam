@@ -785,11 +785,16 @@ void Foam::KinematicCloud<CloudType>::filerSourceTerms(bool useStep)
         if (sourceFilterModel().getMomentumDiffusionFlag())
         {
             const label step = sourceFilterModel().diffusionSteps();
-            const label b = sourceFilterModel().diffusionBandWidthForMomentumCoupling();
-            const label ratio = sourceFilterModel().bToDp();
+            const scalar b = sourceFilterModel().diffusionBandWidthForMomentumCoupling();
+            const scalar ratio = sourceFilterModel().bToDp();
             
             labelListList list = creatStepList(step, b, ratio);
             
+// Info<<"sourceFilterModel().diffusionBandWidthForMomentumCoupling(): "<<    sourceFilterModel().diffusionBandWidthForMomentumCoupling() << endl;            
+// Info<<"momentum list: "<<    list << endl;
+// Info<<"momentum list step: "<<    step << endl;
+// Info<<"momentum list b : "<<    b << endl;
+// Info<<"momentum list ratio: "<<    ratio << endl;
             UTrans() = sourceFilterModel().diffusion(UTrans(),"momentum", list);
             UCoeff() = sourceFilterModel().diffusion(UCoeff(),"momentum", list);
         }
@@ -1051,12 +1056,12 @@ labelListList Foam::KinematicCloud<CloudType>::creatStepList
     );
 
     volScalarField& stepListRecord = tstepListRecord.ref();
-    
+// Info<< "dp dpList "<< dpList<<endl;     
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
         const label celli = p.cell();
-        
+// Info<<p.d() <<endl;        
         if(stepListRecord[celli] < 0)
         {
             

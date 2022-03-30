@@ -700,8 +700,8 @@ void Foam::ThermoCloud<CloudType>::filerSourceTerms(bool useStep)
         CloudType::filerSourceTerms(useStep);
         
         const label step = this->sourceFilterModel().diffusionSteps();
-        const label b = this->sourceFilterModel().diffusionBandWidthForHeatCoupling();
-        const label ratio = this->sourceFilterModel().bToDp();
+        const scalar b = this->sourceFilterModel().diffusionBandWidthForHeatCoupling();
+        const scalar ratio = this->sourceFilterModel().bToDp();
         labelListList list = this->creatStepList(step, b, ratio);
             
         if (this->sourceFilterModel().getHeatDiffusionFlag())
@@ -719,7 +719,7 @@ void Foam::ThermoCloud<CloudType>::filerSourceTerms(bool useStep)
         {
             if (this->sourceFilterModel().getRadiaDiffusionFlag())
             {
-                const label b2 = this->sourceFilterModel().diffusionBandWidthForHeatCoupling();
+                const scalar b2 = this->sourceFilterModel().diffusionBandWidthForHeatCoupling();
                 labelListList list2 = this->creatStepList(step, b2, ratio);
             
                 radAreaP() = this->sourceFilterModel().diffusion(radAreaP(),"radia", list2);

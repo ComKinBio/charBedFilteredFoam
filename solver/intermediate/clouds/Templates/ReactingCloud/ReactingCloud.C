@@ -392,8 +392,8 @@ void Foam::ReactingCloud<CloudType>::filerSourceTerms(bool useStep)
         if (this->sourceFilterModel().getMassDiffusionFlag())
         {
             const label step = this->sourceFilterModel().diffusionSteps();
-            const label b = this->sourceFilterModel().diffusionBandWidthForMassCoupling();
-            const label ratio = this->sourceFilterModel().bToDp();
+            const scalar b = this->sourceFilterModel().diffusionBandWidthForMassCoupling();
+            const scalar ratio = this->sourceFilterModel().bToDp();
             labelListList list = this->creatStepList(step, b, ratio);
             
             forAll(rhoTrans_, i)

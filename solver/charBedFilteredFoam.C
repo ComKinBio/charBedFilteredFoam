@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     scalarList timeCounting(5, 0.0);
     scalarList timeFlag(9, 0.0);
     
-    Info<< "\ncell volumes\n"<< mesh.V() << endl;
+//     Info<< "\ncell volumes\n"<< mesh.V() << endl;
                    
     while (runTime.run())
     {
