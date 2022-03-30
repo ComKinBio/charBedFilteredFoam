@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
         
         timeFlag[3] = runTime.elapsedCpuTime();
         
-        if (useGasFilter)
+        if (useGasFilter && useSourceFilterStep)
         {
             
             labelListList gasFilterlist = coalParcels.creatStepList(gasFilterStep, gasFilterB, gasFilterRatio);
@@ -181,6 +181,17 @@ int main(int argc, char *argv[])
             O2avg = gasFilterModel.filteredField(GasYO2, gasFilterlist);
             CO2avg = gasFilterModel.filteredField(GasYCO2, gasFilterlist);
             
+        }
+        else if (useGasFilter && !useSourceFilterStep)
+        {
+            Ucavg = gasFilterModel.filteredField(Uc);
+            rhoavg = gasFilterModel.filteredField(rhoc);
+            Tavg = gasFilterModel.filteredField(T);
+            muavg = thermo.mu();
+            kappaavg = thermo.kappa();
+            Cpavg = gasFilterModel.filteredField(thermo.Cp());
+            O2avg = gasFilterModel.filteredField(GasYO2);
+            CO2avg = gasFilterModel.filteredField(GasYCO2);
         }
         
         timeFlag[8] = runTime.elapsedCpuTime();
